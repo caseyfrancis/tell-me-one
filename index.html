@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tell Me One</title>
+<meta name="description" content="Pull a card, tell a story. A free conversation game for generations around the table.">
+<meta property="og:title" content="Tell Me One">
+<meta property="og:description" content="Pull a card, tell a story. A free conversation game for generations around the table.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F6F7FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121318" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%23E2F3EA'/%3E%3Cpath d='M12 4.5l7.5 13.5h-15z' fill='none' stroke='%233E9A76' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chonburi&family=Domine:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one phone-first column; the question card is the table centerpiece, controls sit below it within thumb reach. */
+:root{
+  --paper:#F6F7FA; --card:#FFFFFF; --ink:#1C1E24; --muted:#5B6070; --line:#DADDE6;
+  --accent:#2F7A5F; --accent-ink:#FFFFFF; --soft:#E3F2EA; --mark:#DCE3E0; --on-cat:#FFFFFF;
+  /* one color family per card category: shape color, tinted ground, readable ink */
+  --roots:#3E9A76; --roots-bg:#E2F3EA; --roots-ink:#1F5A44;
+  --wonder:#4A7FD6; --wonder-bg:#E3ECFB; --wonder-ink:#1F4E9A;
+  --mirror:#E07A4F; --mirror-bg:#FCE8DD; --mirror-ink:#9A3E1A;
+  --deep:#8C66C4; --deep-bg:#EEE6F8; --deep-ink:#57358A;
+  --play:#E0A92A; --play-bg:#FCF1D3; --play-ink:#7A5A00;
+  --wild:#D9578A; --wild-bg:#FBE3EC; --wild-ink:#9A2953;
+  --kids:#1F9AA6; --kids-bg:#DFF3F4; --kids-ink:#11626A;
+  --title:"Chonburi", Georgia, "Times New Roman", serif;
+  --display:"Domine", Georgia, "Times New Roman", serif;
+  --ui:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#121318; --card:#1B1D24; --ink:#EDEEF2; --muted:#A5A9B6; --line:#2E313B;
+  --accent:#7FD1AE; --accent-ink:#0E1A16; --soft:#15291F; --mark:#263030; --on-cat:#121318;
+  --roots:#5FBF97; --roots-bg:#16291F; --roots-ink:#8EDDBB;
+  --wonder:#6D9CEB; --wonder-bg:#172238; --wonder-ink:#A3C3F7;
+  --mirror:#EB8B62; --mirror-bg:#2E1C14; --mirror-ink:#F5AC8B;
+  --deep:#A485D6; --deep-bg:#241B33; --deep-ink:#C9B1F2;
+  --play:#E8B84A; --play-bg:#2C2412; --play-ink:#F2CD72;
+  --wild:#E2739E; --wild-bg:#2E1621; --wild-ink:#F4A2C2;
+  --kids:#4FC3CD; --kids-bg:#10282B; --kids-ink:#8ADDE3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#121318; --card:#1B1D24; --ink:#EDEEF2; --muted:#A5A9B6; --line:#2E313B;
+  --accent:#7FD1AE; --accent-ink:#0E1A16; --soft:#15291F; --mark:#263030; --on-cat:#121318;
+  --roots:#5FBF97; --roots-bg:#16291F; --roots-ink:#8EDDBB;
+  --wonder:#6D9CEB; --wonder-bg:#172238; --wonder-ink:#A3C3F7;
+  --mirror:#EB8B62; --mirror-bg:#2E1C14; --mirror-ink:#F5AC8B;
+  --deep:#A485D6; --deep-bg:#241B33; --deep-ink:#C9B1F2;
+  --play:#E8B84A; --play-bg:#2C2412; --play-ink:#F2CD72;
+  --wild:#E2739E; --wild-bg:#2E1621; --wild-ink:#F4A2C2;
+  --kids:#4FC3CD; --kids-bg:#10282B; --kids-ink:#8ADDE3; color-scheme:dark}
+[data-cat="kids"]{--cat:var(--kids);--cat-bg:var(--kids-bg);--cat-ink:var(--kids-ink)}
+[data-cat="roots"]{--cat:var(--roots);--cat-bg:var(--roots-bg);--cat-ink:var(--roots-ink)}
+[data-cat="wonder"]{--cat:var(--wonder);--cat-bg:var(--wonder-bg);--cat-ink:var(--wonder-ink)}
+[data-cat="mirror"]{--cat:var(--mirror);--cat-bg:var(--mirror-bg);--cat-ink:var(--mirror-ink)}
+[data-cat="deep"]{--cat:var(--deep);--cat-bg:var(--deep-bg);--cat-ink:var(--deep-ink)}
+[data-cat="play"]{--cat:var(--play);--cat-bg:var(--play-bg);--cat-ink:var(--play-ink)}
+[data-cat="wild"]{--cat:var(--wild);--cat-bg:var(--wild-bg);--cat-ink:var(--wild-ink)}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.45;transition:background-color .5s ease;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.wrap{max-width:560px;margin:0 auto;padding-block:24px calc(var(--dock-h, 150px) + env(safe-area-inset-bottom, 0px) + 32px);display:flex;flex-direction:column;gap:28px}
+h1,h2,h3{margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.hero{display:flex;flex-direction:column;gap:10px}
+.hero h1{font-family:var(--title);font-weight:400;font-size:clamp(42px, 11.5vw, 60px);line-height:1.05;letter-spacing:0}
+.hero .shapes{display:flex;gap:10px;color:var(--ink)}
+.hero .lede{font-family:var(--display);font-size:18px;line-height:1.5;color:var(--muted);max-width:34ch;text-wrap:pretty}
+section{display:flex;flex-direction:column;gap:12px}
+section h2{font-size:13px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.note{font-size:14px;color:var(--muted)}
+/* players */
+.players{display:flex;flex-direction:column;gap:8px}
+.prow{display:flex;gap:8px;align-items:center}
+.prow input{flex:1 1 auto;min-width:0}
+.field{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-height:44px;box-sizing:border-box}
+select.field{flex:0 0 auto;width:9.5rem}
+.icon-btn{flex:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center}
+.ghost{align-self:flex-start;background:none;border:1px dashed var(--line);border-radius:10px;padding:10px 14px;min-height:44px;color:var(--ink)}
+/* category toggles */
+.cats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.cat{position:relative;display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;min-height:52px}
+.cat input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.cat .lbl{display:flex;flex-direction:column;min-width:0}
+.cat .lbl b{font-weight:600;font-size:15px}
+.cat .lbl span{font-size:12px;color:var(--muted)}
+.cat .tick{margin-left:auto;width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);display:grid;place-items:center;flex:none}
+.cat:has(input:checked){border-color:var(--accent);background:var(--soft)}
+.cat:has(input:checked) .tick{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.cat:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.checks{display:flex;flex-direction:column;gap:2px}
+.check{display:flex;gap:12px;align-items:flex-start;padding:8px 0}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.check span b{font-weight:600}
+.check span small{display:block;font-size:13px;color:var(--muted)}
+.addq{display:flex;gap:8px;flex-wrap:wrap}
+.addq input{flex:1 1 220px;min-width:0}
+.customs{display:flex;flex-direction:column;gap:6px}
+.custom{display:flex;gap:10px;align-items:center;font-size:14px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 6px 6px 12px}
+.custom p{flex:1;min-width:0}
+/* buttons */
+.primary{background:var(--accent);color:var(--accent-ink);border:0;border-radius:12px;padding:14px 20px;min-height:48px;font-weight:600}
+.secondary{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 16px;min-height:48px;font-weight:500}
+.primary:disabled{opacity:.45;cursor:not-allowed}
+.dock{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--paper);border-top:1px solid var(--line);
+  padding:12px max(16px, env(safe-area-inset-right, 0px)) calc(12px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px))}
+.dock .in{max-width:560px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center}
+.dock .in p{flex:1 1 160px;font-size:14px;color:var(--muted);min-width:0}
+/* play */
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.progress{font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.meter{height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+.meter i{display:block;height:100%;background:var(--cat, var(--accent));width:0;transition:width .3s, background-color .4s}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:10px 4px;min-height:44px}
+.backbtn{display:inline-flex;gap:4px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px 8px 10px;min-height:44px;font-weight:500}
+.backbtn:disabled{opacity:.35;cursor:default}
+.turn{display:flex;flex-direction:column;gap:2px}
+.turn h2{font-family:var(--title);font-weight:400;font-size:28px;line-height:1.1;color:var(--ink);letter-spacing:0;text-transform:none}
+body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
+.qcard{position:relative;overflow:hidden;background:var(--cat-bg, var(--card));border:1.5px solid color-mix(in srgb, var(--cat, var(--line)) 45%, transparent);border-radius:22px;padding:22px 22px 18px;min-height:300px;display:flex;flex-direction:column;gap:18px;box-shadow:0 20px 44px -30px color-mix(in srgb, var(--cat, #000) 70%, transparent);transition:background-color .4s ease, border-color .4s ease}
+.qcard .ghostshape{position:absolute;right:-40px;bottom:-40px;width:230px;height:230px;color:var(--cat, var(--mark));opacity:.28;pointer-events:none}
+.qcard .ghostshape.fill{fill:var(--cat, var(--mark));stroke:none;opacity:.12;right:-12px;bottom:-12px;width:150px;height:150px}
+.qcard .top{position:relative;display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}
+.qcard .catname{display:flex;gap:8px;align-items:center;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--cat-ink, var(--ink))}
+.qcard .catname svg{color:var(--cat, currentColor)}
+.qcard .who{color:var(--cat-ink, var(--muted));background:var(--card);border-radius:999px;padding:4px 10px;font-weight:500}
+.actions .primary{background:var(--cat-ink, var(--accent));color:var(--on-cat)}
+.turn .eyebrow{color:var(--cat-ink, var(--muted))}
+.hero .shapes svg:nth-child(1){color:var(--roots)}
+.hero .shapes svg:nth-child(2){color:var(--wonder)}
+.hero .shapes svg:nth-child(3){color:var(--mirror)}
+.hero .shapes svg:nth-child(4){color:var(--deep)}
+.hero .shapes svg:nth-child(5){color:var(--play)}
+.hero .shapes svg:nth-child(6){color:var(--wild)}
+.hero .shapes svg:nth-child(7){color:var(--kids)}
+.cat > svg{color:var(--cat)}
+.cat:has(input:checked){border-color:var(--cat);background:var(--cat-bg)}
+.cat:has(input:checked) .tick{background:var(--cat-ink);border-color:var(--cat-ink);color:var(--on-cat)}
+.cat .tick svg{visibility:hidden}
+.cat:has(input:checked) .tick svg{visibility:visible}
+.custom > svg,.keptitem .meta svg{color:var(--cat)}
+.qcard .q{position:relative;font-family:var(--display);font-weight:500;font-size:clamp(22px, 6vw, 28px);line-height:1.35;text-wrap:pretty;flex:1}
+.qcard .tools{position:relative;display:flex;gap:8px;flex-wrap:wrap}
+.tool{display:inline-flex;gap:6px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:40px;font-size:14px}
+.tool[aria-pressed="true"]{background:var(--cat-ink, var(--accent));border-color:var(--cat-ink, var(--accent));color:var(--on-cat)}
+.qcard.enter{animation:deal .35s ease-out}
+@keyframes deal{from{transform:translateY(10px) rotate(-1deg);opacity:.4}to{transform:none;opacity:1}}
+.answer{background:var(--card);border:1px solid color-mix(in srgb, var(--cat, var(--line)) 40%, transparent);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.answer .eyebrow{color:var(--cat-ink, var(--muted))}
+.answer .who-line{font-size:17px;line-height:1.35}
+.answer .who-line b{font-family:var(--title);font-weight:400;font-size:24px;color:var(--cat-ink, var(--ink))}
+.answer .sub{font-size:14px;color:var(--muted)}
+.answer .chip{border-color:color-mix(in srgb, var(--cat, var(--line)) 50%, transparent)}
+.answer .chip.surprise{display:inline-flex;gap:6px;align-items:center;background:transparent;border-style:dashed;color:var(--cat-ink, var(--muted))}
+.spot{font-size:15px;display:flex;gap:8px;align-items:center}
+.spot b{font-weight:600}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.actions .primary{grid-column:1 / -1}
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:40px;font-size:15px}
+.chip.used{text-decoration:line-through;color:var(--muted);background:transparent}
+.chip.now{border-color:var(--accent)}
+.more{display:flex;flex-direction:column;gap:8px}
+.seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg label{position:relative;display:flex;flex-direction:column;gap:2px;justify-content:center;padding:10px 12px;border-radius:10px;min-height:52px;cursor:pointer}
+.seg input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.seg label b{font-weight:600;font-size:15px}
+.seg label span{font-size:12px;color:var(--muted)}
+.seg label:has(input:checked){background:var(--soft);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.seg label:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.steps{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--cat-ink, var(--muted));font-variant-numeric:tabular-nums;margin-top:4px}
+.steps i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--cat, var(--accent));display:inline-block}
+.steps i.on{background:var(--cat, var(--accent))}
+.steps span{margin-left:4px}
+.actions .secondary:disabled{opacity:.45;cursor:default}
+/* recap */
+.kept{display:flex;flex-direction:column;gap:10px}
+.keptitem{background:var(--cat-bg);border:1px solid color-mix(in srgb, var(--cat) 35%, transparent);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.keptitem .q{font-family:var(--display);font-size:19px;line-height:1.3}
+.keptitem .meta{display:flex;gap:6px;align-items:center;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cat-ink)}
+.empty{border:1px dashed var(--line);border-radius:14px;padding:18px;color:var(--muted);font-size:15px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.credit{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:13px;color:var(--muted);padding-top:12px;border-top:1px solid var(--line)}
+.credit a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.credit a:hover{color:var(--ink)}
+.suggest{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.suggest-head{display:flex;flex-direction:column;gap:4px}
+.suggest-head h2{font-family:var(--title);font-weight:400;font-size:22px;letter-spacing:0;text-transform:none;color:var(--ink)}
+.suggest > .secondary{align-self:flex-start}
+.suggest-form{display:flex;flex-direction:column;gap:8px;position:relative}
+.suggest-form label{font-size:13px;font-weight:600;color:var(--ink)}
+.suggest-form label .muted{font-weight:400}
+.suggest-form textarea{resize:vertical;min-height:84px;font-family:var(--display);font-size:16px;line-height:1.4}
+.suggest-row{display:flex;flex-wrap:wrap;gap:10px}
+.suggest-col{flex:1 1 180px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.suggest-col .field{width:100%}
+.suggest-status{font-size:14px;border-radius:10px;padding:10px 12px;background:var(--soft);color:var(--ink)}
+.suggest-status.err{background:color-mix(in srgb, #D9578A 14%, var(--card))}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom, 0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:999px;font-size:14px;z-index:9}
+@media (max-width:420px){select.field{width:8rem}}
+@media (prefers-reduced-motion: reduce){.qcard.enter{animation:none}.meter i{transition:none}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+  <!-- SETUP -->
+  <div id="setup" style="display:flex;flex-direction:column;gap:28px">
+    <header class="hero">
+      <div class="shapes" id="heroShapes" aria-hidden="true"></div>
+      <h1>Tell Me One</h1>
+      <p class="lede">Pull a card, tell a story. A conversation game for generations around the table.</p>
+    </header>
+
+    <section aria-labelledby="h-players">
+      <h2 id="h-players">Who's playing</h2>
+      <p class="note" id="exampleNote">These are placeholder names. Change them to your family, in seating order. The youngest goes first.</p>
+      <div class="players" id="players"></div>
+      <button class="ghost" id="addPlayer" type="button">+ Add a player</button>
+    </section>
+
+    <section aria-labelledby="h-cats">
+      <h2 id="h-cats">Cards in the bowl</h2>
+      <div class="cats" id="cats"></div>
+    </section>
+
+    <section aria-labelledby="h-mode">
+      <h2 id="h-mode">How to play</h2>
+      <div class="seg" role="radiogroup" aria-labelledby="h-mode">
+        <label><input type="radio" name="mode" id="modeTable" value="table"><b>Around the table</b><span>Pass after every card</span></label>
+        <label><input type="radio" name="mode" id="modeInterview" value="interview"><b>Interview mode</b><span>3 questions, then pass</span></label>
+      </div>
+      <p class="note" id="modeNote"></p>
+    </section>
+
+    <section aria-labelledby="h-rules">
+      <h2 id="h-rules">House rules</h2>
+      <div class="checks">
+        <label class="check"><input type="checkbox" id="rMore"><span><b>Tell me more</b><small>Everyone gets one follow-up question per round.</small></span></label>
+      </div>
+    </section>
+
+    <section aria-labelledby="h-own">
+      <h2 id="h-own">Add your own questions</h2>
+      <form class="addq" id="addQ">
+        <label class="sr" for="newQ" hidden>Question</label>
+        <input class="field" id="newQ" placeholder="Grandpa, what was your first car?" autocomplete="off">
+        <select class="field" id="newQCat" aria-label="Category"></select>
+        <button class="secondary" type="submit">Add</button>
+      </form>
+      <div class="customs" id="customs"></div>
+    </section>
+
+    <section aria-labelledby="h-reset">
+      <h2 id="h-reset">Start over</h2>
+      <div class="row">
+        <button class="ghost" type="button" data-reset="players">Reset players</button>
+        <button class="ghost" type="button" data-reset="game" id="resetGameBtn">Clear saved game</button>
+        <button class="ghost" type="button" data-reset="all">Reset everything</button>
+      </div>
+      <div class="sheet" id="resetConfirm" hidden>
+        <p id="resetMsg"></p>
+        <div class="row"><button class="primary" id="resetYes" type="button">Yes, reset</button><button class="linkbtn" id="resetNo" type="button">Cancel</button></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- PLAY -->
+  <div id="play" hidden style="display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="bar"><button class="backbtn" id="backBtn" type="button" aria-label="Go back to the previous card">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Back</button>
+        <span class="progress" id="progress"></span><button class="backbtn" style="padding-left:14px" id="endGame" type="button">Stop for now</button></div>
+      <div class="meter"><i id="meter"></i></div>
+    </div>
+    <div class="turn"><span class="eyebrow" id="turnGroup"></span><h2 id="turnName"></h2><div class="steps" id="steps" hidden></div></div>
+
+    <article class="qcard" id="qcard" aria-live="polite">
+      <svg class="ghostshape fill" id="ghost2" viewBox="0 0 24 24" aria-hidden="true"></svg>
+      <svg class="ghostshape" id="ghost" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linejoin="round" aria-hidden="true"></svg>
+      <div class="top"><span class="catname" id="catName"></span><span class="who" id="catWho"></span></div>
+      <p class="q" id="question"></p>
+      <div class="tools">
+        <button class="tool" id="readBtn" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg><span id="readLbl">Read it</span>
+        </button>
+        <button class="tool" id="keepBtn" type="button" aria-pressed="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-6-4-6 4z"/></svg><span id="keepLbl">Keep this story</span>
+        </button>
+        <button class="tool" id="timerBtn" type="button" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg><span id="timerLbl">30-second timer</span>
+        </button>
+      </div>
+    </article>
+
+    <div class="answer" id="answer" aria-live="polite"></div>
+    <p class="spot" id="spot" hidden></p>
+
+    <div class="sheet" id="spotSheet" hidden>
+      <p><b>Pass the spotlight.</b> <span class="muted">Who answers this one too?</span></p>
+      <div class="chips" id="spotChips"></div>
+      <div class="row"><button class="secondary" id="spotRandom" type="button">Surprise me</button><button class="linkbtn" id="spotCancel" type="button">Cancel</button></div>
+    </div>
+
+    <div class="actions">
+      <button class="secondary" id="putBack" type="button">Put it back</button>
+      <button class="secondary" id="spotBtn" type="button">Pass the spotlight</button>
+      <button class="primary" id="nextBtn" type="button">Next card</button>
+    </div>
+
+    <div class="more" id="moreBox">
+      <span class="eyebrow">Tell me more · one each this round</span>
+      <div class="chips" id="moreChips"></div>
+    </div>
+  </div>
+
+  <!-- RECAP -->
+  <div id="recap" hidden style="display:flex;flex-direction:column;gap:24px">
+    <header class="hero">
+      <span class="eyebrow" id="recapEyebrow"></span>
+      <h1 style="font-size:clamp(36px, 10vw, 52px)">Stories we kept</h1>
+      <p class="muted">Add a note so you remember who told it and what you want to hear more about.</p>
+    </header>
+    <div class="kept" id="kept"></div>
+    <div class="row">
+      <button class="primary" id="keepPlaying" type="button" hidden>Keep playing</button>
+      <button class="primary" id="copyKept" type="button">Copy the list</button>
+      <button class="secondary" id="again" type="button">Play again</button>
+      <button class="linkbtn" id="toSetup" type="button">Change players</button>
+    </div>
+  </div>
+
+  <section class="suggest" id="suggest" aria-labelledby="h-suggest">
+    <div class="suggest-head">
+      <h2 id="h-suggest">Got a great question?</h2>
+      <p class="note">Send it in. Good ones may end up in the deck for every family that plays.</p>
+    </div>
+    <button class="secondary" id="suggestOpen" type="button" aria-expanded="false" aria-controls="suggestForm">Suggest a question</button>
+    <form id="suggestForm" class="suggest-form" hidden novalidate>
+      <label for="sgQ">Your question</label>
+      <textarea class="field" id="sgQ" name="question" rows="3" maxlength="300" required placeholder="What’s a smell that takes you straight back to being a kid?"></textarea>
+      <div class="suggest-row">
+        <div class="suggest-col">
+          <label for="sgCat">Kind of card</label>
+          <select class="field" id="sgCat" name="category"></select>
+        </div>
+        <div class="suggest-col">
+          <label for="sgName">Your first name <span class="muted">(optional)</span></label>
+          <input class="field" id="sgName" name="name" maxlength="40" autocomplete="given-name">
+        </div>
+      </div>
+      <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+      <p class="suggest-status" id="sgStatus" role="status" hidden></p>
+      <div class="row"><button class="primary" id="sgSend" type="submit">Send it to Casey</button><button class="linkbtn" id="sgCancel" type="button">Cancel</button></div>
+    </form>
+  </section>
+
+  <footer class="credit" id="credit">
+    <p>Free for your table · Made by Casey Francis</p>
+    <p><a href="https://ko-fi.com/franciscasey" target="_blank" rel="noopener noreferrer">Tip me if you had a good conversation</a></p>
+  </footer>
+</div>
+
+<div class="dock" id="dock">
+  <div class="in"><p id="dockNote"></p><button class="secondary" id="resumeBtn" type="button" hidden></button><button class="primary" id="startBtn" type="button">Start the game</button></div>
+</div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+const SHAPES = {
+  tri:'<path d="M12 3l9.5 17h-19z"/>',
+  star:'<path d="M12 2.5l2.9 6.2 6.6.8-4.9 4.6 1.3 6.6L12 17.4l-5.9 3.3 1.3-6.6-4.9-4.6 6.6-.8z"/>',
+  circle:'<circle cx="12" cy="12" r="9"/>',
+  diamond:'<path d="M12 2.5l9.5 9.5-9.5 9.5-9.5-9.5z"/>',
+  square:'<rect x="3.5" y="3.5" width="17" height="17"/>',
+  heart:'<path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/>',
+  moon:'<path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/>'
+};
+const icon = (s, size, sw) => `<svg width="${size||16}" height="${size||16}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||2.2}" stroke-linejoin="round" aria-hidden="true">${SHAPES[s]}</svg>`;
+
+const CATS = {
+  roots:{name:'Roots', who:'Grown-ups tell', label:'Family stories', shape:'tri', q:[
+    "What’s a fight you had with a brother or sister that you can laugh about now?",
+    "What did your house smell and sound like when you were little?",
+    "How did each of the kids get their name? Who picked it, and why?",
+    "What did your parents do for work, and what were they like at it?",
+    "Tell about a hard time or big change our family got through. What helped us?",
+    "What’s something you got in trouble for as a kid that was kind of worth it?",
+    "What did you want to be when you were 6? What about when you were 13?",
+    "Name one rule from the house you grew up in that the kids would never survive.",
+    "What surprised you most about being a grown-up?",
+    "When did you first feel like a grown-up?",
+    ["What’s a lesson your parents taught you?","Everyone"],
+    ["What were your kids like when they were 6, 8, and 13?","Grandparents tell"],
+    ["What was your very first job? What did it pay, and what did you buy?","Grandparents tell"],
+    ["Tell us one story about your own grandparents.","Grandparents tell"],
+    ["What’s a meal or treat your family made growing up that nobody makes quite the same way anymore?","Grandparents tell"],
+    ["How did you two first meet? Tell it from the beginning.","Grandparents tell"]
+  ]},
+  wonder:{name:'Wonder', who:'Everyone', shape:'star', q:[
+    "Pick an animal for two people at the table. Why those animals?",
+    "You shrink to the size of a bug for one day. Where do you go first?",
+    "Invent a brand-new holiday. What’s it called, and how do we celebrate?",
+    "A dragon moves in with our family. What chore does it get?",
+    "You open a restaurant with only one thing on the menu. What is it?",
+    "Give the person on your left a superpower. Which one, and why?",
+    "You find a tiny door at the bottom of a tree. What’s behind it?",
+    "You can talk to one animal for a day. Which one, and what do you ask it?",
+    "If our family lived inside any movie, book, or video game world, which one would it be?",
+    "You can go anywhere in the world tomorrow. Where, and who comes with you?"
+  ]},
+  mirror:{name:'Mirror', who:'Everyone', shape:'circle', q:[
+    "What’s something the person on your right is really good at?",
+    "What’s the funniest thing that has ever happened when our family was together?",
+    "Tell about a time someone at this table helped you.",
+    "What’s a favorite food, song, or movie you share with someone at this table?",
+    "Which person here are you most alike? In what way?",
+    "What’s one thing you’d like someone at this table to teach you?",
+    "Describe the person across from you in three words. Kind words only.",
+    "What’s a memory with someone here that you never want to forget?",
+    "What’s something you’re proud of? Then name something you’re proud of someone here for.",
+    "Name a friend you admire. What makes them great?",
+    "What’s your favorite book or song? Why that one?"
+  ]},
+  deep:{name:'Deep', who:'Big kids & grown-ups', shape:'diamond', q:[
+    "What’s something you used to believe that you don’t believe anymore?",
+    "When do you feel most like yourself?",
+    "What do you wish people understood about being your age?",
+    "What’s a mistake that ended up teaching you something?",
+    "What’s been hard lately? And what’s been good?",
+    "Who outside our family has shaped who you are? How?",
+    "Big kids: what will you be like as a grown-up? Grown-ups: what did you think you’d be like?",
+    "Ask anyone here a question you’ve always wondered about.",
+    "Who’s someone you miss? Tell us about them.",
+    "You can’t change anything about it. What’s one moment you’d go back to, just to feel it again?",
+    "What’s something you’d do over if you could?",
+    "What’s a lesson you wish you’d learned sooner?"
+  ]},
+  kids:{name:'Kids Only', who:'Kids answer', shape:'moon', q:[
+    "What’s a question you’ve always wanted to ask a grown-up here? Ask it now.",
+    "What’s the best part about being your age?",
+    "You’re in charge of the house for one day. What are the rules?",
+    "What do you think Grandma and Grandpa were like as kids? Then they tell you if you’re right.",
+    "What’s a grown-up job you’d want to try for one day?",
+    "What’s something you’re good at that the grown-ups might not know about?",
+    "What’s the hardest part about being your age right now?",
+    "What’s something grown-ups worry about too much?",
+    "What’s something grown-ups should try, change, or do differently?"
+  ]},
+  play:{name:'Play', who:'Kids lead', shape:'square', q:[
+    "Act out your morning without talking. Everyone guesses what you’re doing.",
+    "Draw the person on your left in 30 seconds. Then show them.",
+    "Teach everyone one dance move. Everyone has to try it.",
+    "Build a story together, one sentence each. Start: “Once there was a very small…”",
+    "Do an impression of someone at the table. Can they tell it’s them?",
+    "Hum a song and see who can name it first.",
+    "Do your best supermodel walk across the room, or pick a younger kid to be your runway partner. Everyone cheers!",
+    "Make the sound of your favorite animal. Everyone joins in."
+  ]},
+  wild:{name:'Wild', who:'Your choice', shape:'heart', q:[
+    "Tell Me One: pick anyone at the table and say, “Tell me one story about…” You fill in the blank!"
+  ]}
+};
+const GROUPS = {little:'Little kid', teen:'Big kid', adult:'Grown-up', grand:'Grandparent'};
+const RANK = {little:0, teen:1, adult:2, grand:3};
+const KEY = 'tell-me-one-v1';
+const uid = () => Math.random().toString(36).slice(2,9);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+
+const examplePlayers = () => [
+  ['Tillie','grand'],['Ted','adult'],['Roxane','adult'],['Malcolm','teen'],['Willa','little']
+].map(([name,group]) => ({id:uid(), name, group}));
+const EXAMPLE = examplePlayers();
+
+let state = {
+  view:'setup', example:true,
+  players:EXAMPLE,
+  cats:{roots:true, wonder:true, mirror:true, deep:true, play:true, kids:true, wild:true},
+  rules:{more:true, hints:true, read:false},
+  custom:[], kept:[], mode:'table',
+  deck:[], idx:0, turn:0, spotlight:null, answerer:null, used:{}, roundCount:0, played:0, history:[],
+  gameMode:'table', q:1, swapUsed:false
+};
+/* The game in progress is saved separately so it can be resumed at the next gathering. */
+const GAME_KEY = KEY + '-game';
+const GAME_FIELDS = ['players','deck','idx','turn','spotlight','answerer','used','roundCount','played','gameMode','q','swapUsed'];
+const MODE_NOTES = {
+  table:'Everyone takes turns drawing a card. Answer it, or hand it to the person the card names, then pass the phone to the next seat. Good for quick, lively rounds.',
+  interview:'One person gets interviewed: they answer three questions in a row while everyone else listens and asks follow-ups. Then the phone passes to the next seat. Questions are picked to fit each person’s age, and they can skip one card per interview. Good for longer stories.'
+};
+function saveGame(){
+  try{ const g = {}; GAME_FIELDS.forEach(k => g[k] = state[k]); localStorage.setItem(GAME_KEY, JSON.stringify(g)); }catch(e){}
+}
+function loadGame(){
+  try{ const g = JSON.parse(localStorage.getItem(GAME_KEY) || 'null'); return g && Array.isArray(g.deck) && g.idx < g.deck.length ? g : null; }catch(e){ return null; }
+}
+function clearGame(){ try{ localStorage.removeItem(GAME_KEY); }catch(e){} }
+function pushHistory(){
+  const snap = {}; ['deck','idx','turn','spotlight','answerer','used','roundCount','played','q','swapUsed'].forEach(k => snap[k] = state[k]);
+  state.history.push(JSON.parse(JSON.stringify(snap)));
+  if(state.history.length > 60) state.history.shift();
+}
+
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY); if(!raw) return;
+    const s = JSON.parse(raw);
+    ['players','rules','custom','kept','example','mode'].forEach(k => { if(s[k] !== undefined) state[k] = s[k]; });
+    if(s.cats) Object.keys(state.cats).forEach(k => { if(typeof s.cats[k] === 'boolean') state.cats[k] = s.cats[k]; });
+  }catch(e){}
+}
+function save(){
+  try{
+    const {players,cats,rules,custom,kept,example,mode} = state;
+    localStorage.setItem(KEY, JSON.stringify({players,cats,rules,custom,kept,example,mode}));
+  }catch(e){}
+}
+
+function toast(msg){
+  const t = $('toast'); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.hidden = true; }, 1800);
+}
+function nameList(ps){
+  const n = ps.map(p => p.name || 'someone');
+  if(n.length <= 1) return n[0] || '';
+  return n.slice(0,-1).join(', ') + ' or ' + n[n.length-1];
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+const named = () => state.players.filter(p => p.name.trim());
+
+/* ---------- SETUP ---------- */
+function renderSetup(){
+  $('heroShapes').innerHTML = ['tri','star','circle','diamond','square','heart','moon'].map(s => icon(s,22,2)).join('');
+  $('exampleNote').hidden = !state.example;
+  $('players').innerHTML = state.players.map(p => `
+    <div class="prow">
+      <input class="field" id="pname-${p.id}" data-pid="${p.id}" data-f="name" value="${esc(p.name)}" placeholder="Name" aria-label="Player name" autocomplete="off">
+      <select class="field" id="pgroup-${p.id}" data-pid="${p.id}" data-f="group" aria-label="Age group for ${esc(p.name || 'player')}">
+        ${Object.entries(GROUPS).map(([k,v]) => `<option value="${k}"${p.group===k?' selected':''}>${v}</option>`).join('')}
+      </select>
+      <button class="icon-btn" type="button" data-remove="${p.id}" aria-label="Remove ${esc(p.name || 'player')}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>`).join('');
+  $('cats').innerHTML = Object.entries(CATS).map(([k,c]) => {
+    const n = c.q.length + state.custom.filter(x => x.cat===k).length;
+    return `<label class="cat" data-cat="${k}">${icon(c.shape,20,2)}
+      <span class="lbl"><b>${c.name}</b><span>${esc(c.label || c.who)} · ${n} card${n===1?'':'s'}</span></span>
+      <span class="tick" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>
+      <input type="checkbox" id="cat-${k}" data-cat="${k}"${state.cats[k]?' checked':''} aria-label="${c.name} cards"></label>`;
+  }).join('');
+  $('newQCat').innerHTML = Object.entries(CATS).map(([k,c]) => `<option value="${k}">${c.name}</option>`).join('');
+  $('customs').innerHTML = state.custom.map(c => `
+    <div class="custom" data-cat="${c.cat}">${icon(CATS[c.cat].shape,14,2.2)}<p>${esc(c.t)}</p>
+      <button class="icon-btn" style="width:36px;height:36px" type="button" data-delq="${c.id}" aria-label="Delete this question">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('');
+  $('rMore').checked = state.rules.more;
+  $('modeTable').checked = state.mode !== 'interview'; $('modeInterview').checked = state.mode === 'interview';
+  $('modeNote').textContent = MODE_NOTES[state.mode === 'interview' ? 'interview' : 'table'];
+  updateDock();
+}
+document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener('change', e => {
+  state.mode = e.target.value; save();
+  $('modeNote').textContent = MODE_NOTES[state.mode];
+}));
+function deckSize(){
+  return Object.keys(CATS).filter(k => state.cats[k]).reduce((n,k) => n + CATS[k].q.length + state.custom.filter(x => x.cat===k).length, 0);
+}
+function updateDock(){
+  const n = deckSize(), p = named().length;
+  $('dockNote').textContent = !n ? 'Turn on at least one kind of card.' : p < 2 ? 'Add at least two players.' : `${p} players · ${n} cards`;
+  $('startBtn').disabled = !n || p < 2;
+  const g = loadGame();
+  $('resumeBtn').hidden = !g;
+  $('resetGameBtn').hidden = !g;
+  $('startBtn').textContent = g ? 'New game' : 'Start the game';
+  if(g){
+    const left = g.deck.length - g.idx;
+    $('resumeBtn').textContent = `Resume ${g.gameMode === 'interview' ? 'interviews' : 'game'} · ${left} left`;
+  }
+}
+function resumeGame(){
+  const g = loadGame(); if(!g) return;
+  Object.assign(state, g); state.history = [];
+  show('play'); keepAwake(); renderCard(true);
+}
+$('resumeBtn').addEventListener('click', resumeGame);
+
+$('players').addEventListener('input', e => {
+  const el = e.target, p = state.players.find(x => x.id === el.dataset.pid); if(!p) return;
+  p[el.dataset.f] = el.value; state.example = false; save(); updateDock();
+});
+$('players').addEventListener('change', e => { if(e.target.dataset.f === 'name') renderSetup(); });
+$('players').addEventListener('click', e => {
+  const b = e.target.closest('[data-remove]'); if(!b) return;
+  state.players = state.players.filter(p => p.id !== b.dataset.remove); state.example = false; save(); renderSetup();
+});
+$('addPlayer').addEventListener('click', () => {
+  const p = {id:uid(), name:'', group:'adult'}; state.players.push(p); save(); renderSetup();
+  const el = $('pname-'+p.id); if(el) el.focus();
+});
+$('cats').addEventListener('change', e => { const k = e.target.dataset.cat; if(!k) return; state.cats[k] = e.target.checked; save(); updateDock(); });
+$('rMore').addEventListener('change', e => { state.rules.more = e.target.checked; save(); });
+$('addQ').addEventListener('submit', e => {
+  e.preventDefault(); const t = $('newQ').value.trim(); if(!t) return;
+  state.custom.push({id:uid(), cat:$('newQCat').value, t}); $('newQ').value = ''; save(); renderSetup(); toast('Added to the bowl');
+});
+/* Start over: every reset asks once on the page before it happens. */
+const RESETS = {
+  players:{msg:'Replace your players with the example names? Your saved game is cleared too, since it belongs to these players.', done:'Players reset',
+    run(){ state.players = examplePlayers(); state.example = true; clearGame(); }},
+  game:{msg:'Clear the saved game? The next game starts with a fresh shuffle. Your players and kept stories stay.', done:'Saved game cleared',
+    run(){ clearGame(); }},
+  all:{msg:'Reset everything? This removes your players, your own questions, your kept stories and the saved game, and turns all categories back on.', done:'Everything reset',
+    run(){
+      clearGame();
+      state.players = examplePlayers(); state.example = true; state.custom = []; state.kept = [];
+      Object.keys(state.cats).forEach(k => state.cats[k] = true);
+      state.rules = {more:true, hints:true, read:false}; state.mode = 'table';
+    }}
+};
+let pendingReset = null;
+document.querySelector('#setup').addEventListener('click', e => {
+  const b = e.target.closest('[data-reset]'); if(!b) return;
+  pendingReset = b.dataset.reset;
+  $('resetMsg').textContent = RESETS[pendingReset].msg;
+  $('resetConfirm').hidden = false; $('resetYes').focus();
+});
+$('resetNo').addEventListener('click', () => { pendingReset = null; $('resetConfirm').hidden = true; });
+$('resetYes').addEventListener('click', () => {
+  const r = RESETS[pendingReset]; if(!r) return;
+  r.run(); pendingReset = null; $('resetConfirm').hidden = true;
+  save(); renderSetup(); toast(r.done);
+});
+$('customs').addEventListener('click', e => {
+  const b = e.target.closest('[data-delq]'); if(!b) return;
+  state.custom = state.custom.filter(c => c.id !== b.dataset.delq); save(); renderSetup();
+});
+
+/* ---------- GAME ---------- */
+let wakeLock = null;
+async function keepAwake(){ try{ if('wakeLock' in navigator) wakeLock = await navigator.wakeLock.request('screen'); }catch(e){} }
+document.addEventListener('visibilitychange', () => { if(document.visibilityState==='visible' && state.view==='play') keepAwake(); });
+
+function startGame(){
+  state.players = named().length ? state.players.filter(p => p.name.trim()) : state.players;
+  const deck = [];
+  Object.keys(CATS).forEach(k => {
+    if(!state.cats[k]) return;
+    CATS[k].q.forEach(q => { const [t,who] = Array.isArray(q) ? q : [q, CATS[k].who]; deck.push({cat:k, t, who}); });
+    state.custom.filter(c => c.cat===k).forEach(c => deck.push({cat:k, t:c.t, who:CATS[k].who, own:true}));
+  });
+  state.deck = shuffle(deck); state.idx = 0; state.played = 0;
+  let youngest = 0;
+  state.players.forEach((p,i) => { if(RANK[p.group] < RANK[state.players[youngest].group]) youngest = i; });
+  state.turn = youngest; state.used = {}; state.roundCount = 0; state.spotlight = null; state.answerer = null; state.history = [];
+  state.gameMode = state.mode === 'interview' ? 'interview' : 'table'; state.q = 1; state.swapUsed = false;
+  if(state.gameMode === 'interview' && !bringEligible() && !nextInterview()){ toast('No cards fit these players. Turn on more categories.'); return; }
+  save(); show('play'); keepAwake(); renderCard(true);
+}
+/* Interview mode: only draw cards the person in the hot seat can answer themselves. */
+function eligible(c, p){
+  if(state.gameMode !== 'interview') return true;
+  const g = p.group, grown = g==='adult' || g==='grand', kid = g==='little' || g==='teen';
+  switch(c.cat){
+    case 'roots': return c.who==='Everyone' || (c.who==='Grown-ups tell' && grown) || (c.who==='Grandparents tell' && g==='grand');
+    case 'deep': return g !== 'little';
+    case 'play': case 'kids': return kid;
+    default: return true;
+  }
+}
+function bringEligible(){
+  const p = current();
+  for(let j = state.idx; j < state.deck.length; j++){
+    if(eligible(state.deck[j], p)){
+      if(j !== state.idx){ const [c] = state.deck.splice(j,1); state.deck.splice(state.idx,0,c); }
+      return true;
+    }
+  }
+  return false;
+}
+function nextInterview(){
+  for(let n = 0; n < state.players.length; n++){
+    advanceTurn(); state.q = 1; state.swapUsed = false;
+    if(bringEligible()) return true;
+  }
+  return false;
+}
+const current = () => state.players[state.turn];
+const card = () => state.deck[state.idx];
+
+/* Decide who answers: the drawer, or someone the drawer hands it to. */
+function assignment(c, p){
+  const others = state.players.filter(x => x.id !== p.id);
+  const grands = others.filter(x => x.group==='grand');
+  const grown = others.filter(x => x.group==='adult' || x.group==='grand');
+  const older = others.filter(x => x.group!=='little');
+  const kids = others.filter(x => x.group==='little' || x.group==='teen');
+  const isKid = p.group==='little' || p.group==='teen';
+  if(c.cat==='roots' && c.who==='Grandparents tell' && p.group!=='grand' && grands.length)
+    return {pool:grands, action:'picks a grandparent', need:'Read it to them. Who answers?'};
+  if(c.who==='Kids answer' && !isKid && kids.length)
+    return {pool:kids, action:'picks a kid', need:'Kids only! Read it to them. Who answers?'};
+  if(c.cat==='roots' && c.who==='Grown-ups tell' && isKid && grown.length)
+    return {pool:grown, action:'picks a grown-up', need:'Read it to them. Who answers?'};
+  if(c.cat==='deep' && p.group==='little' && older.length)
+    return {pool:older, action:'picks someone older', need:'This one is a big question. Who answers?'};
+  if(c.cat==='play' && !isKid && kids.length)
+    return {pool:kids, action:'picks a kid to lead', need:'Hand it over. Who leads it?'};
+  return null;
+}
+const answererId = () => state.answerer || current().id;
+function renderAnswer(){
+  const c = card(), p = current(), a = assignment(c, p), box = $('answer');
+  const verb = c.cat==='play' ? 'leads it' : 'answers';
+  if(!a){
+    box.innerHTML = `<span class="eyebrow">Who answers</span>
+      <p class="who-line"><b>${esc(p.name)}</b> ${verb}.</p>
+      <p class="sub">Read it out loud, then answer it yourself.</p>`;
+    return;
+  }
+  const chosen = a.pool.find(x => x.id === state.answerer);
+  if(chosen){
+    box.innerHTML = `<span class="eyebrow">Who answers</span>
+      <p class="who-line"><b>${esc(chosen.name)}</b> ${verb}.</p>
+      <p class="sub">${esc(p.name)} reads it to them.</p>
+      <button class="linkbtn" style="align-self:flex-start;padding-left:0" type="button" data-repick>Pick someone else</button>`;
+  } else {
+    box.innerHTML = `<span class="eyebrow">Who answers</span>
+      <p class="who-line"><b>${esc(p.name)}</b> ${esc(a.action)}.</p>
+      <p class="sub">${esc(a.need)}</p>
+      <div class="chips">${a.pool.map(x => `<button class="chip" type="button" data-answer="${x.id}">${esc(x.name)}</button>`).join('')}${a.pool.length > 1 ? `<button class="chip surprise" type="button" data-answer-random><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>Surprise me</button>` : ''}</div>`;
+  }
+}
+$('answer').addEventListener('click', e => {
+  const b = e.target.closest('[data-answer]');
+  if(b){ state.answerer = b.dataset.answer; if(state.spotlight === state.answerer) state.spotlight = null; renderAnswer(); renderSpot(); return; }
+  if(e.target.closest('[data-answer-random]')){
+    const a = assignment(card(), current()); if(!a) return;
+    const pick = a.pool[Math.floor(Math.random() * a.pool.length)];
+    state.answerer = pick.id; if(state.spotlight === state.answerer) state.spotlight = null;
+    renderAnswer(); renderSpot(); toast(`Surprise! ${pick.name} answers`); return;
+  }
+  if(e.target.closest('[data-repick]')){ state.answerer = null; renderAnswer(); }
+});
+
+function renderCard(animate){
+  const c = card(), p = current(), meta = CATS[c.cat];
+  $('progress').textContent = `Card ${state.idx+1} of ${state.deck.length}`;
+  $('meter').style.width = ((state.idx+1)/state.deck.length*100) + '%';
+  const iv = state.gameMode === 'interview';
+  $('turnGroup').textContent = iv ? `Interview mode · ${GROUPS[p.group]}` : GROUPS[p.group];
+  $('turnName').textContent = iv ? `${p.name}’s Interview` : `${p.name} drew a card`;
+  $('steps').hidden = !iv;
+  if(iv) $('steps').innerHTML = [1,2,3].map(n => `<i class="${n <= state.q ? 'on' : ''}"></i>`).join('') + `<span>Question ${state.q} of 3</span>`;
+  $('putBack').textContent = iv ? (state.swapUsed ? 'Swap used' : 'Free swap') : 'Put it back';
+  $('putBack').disabled = iv && state.swapUsed;
+  document.body.dataset.cat = c.cat;
+  $('ghost').innerHTML = SHAPES[meta.shape];
+  $('ghost2').innerHTML = SHAPES[meta.shape];
+  $('catName').innerHTML = icon(meta.shape,16,2.2) + esc(meta.name) + (c.own ? ' <span class="muted" style="letter-spacing:0;text-transform:none;font-weight:500">· yours</span>' : '');
+  $('catWho').textContent = c.who;
+  $('question').textContent = c.t;
+  const kept = state.kept.some(k => k.t === c.t);
+  $('keepBtn').setAttribute('aria-pressed', kept ? 'true' : 'false');
+  $('keepLbl').textContent = kept ? 'Kept' : 'Keep this story';
+  $('readBtn').hidden = false;
+  if(speaking) stopSpeaking();
+  stopTimer(); $('timerBtn').hidden = !/30 seconds/i.test(c.t);
+  renderAnswer();
+  renderSpot(); $('spotSheet').hidden = true;
+  const nextP = state.players[(state.turn + 1) % state.players.length];
+  $('nextBtn').textContent = state.idx === state.deck.length-1 ? 'Finish'
+    : iv && state.q >= 3 ? `Next interview → ${nextP.name}` : iv ? 'Next question' : 'Next card';
+  renderMore();
+  $('backBtn').disabled = !state.history.length;
+  saveGame();
+  if(animate){ const q = $('qcard'); q.classList.remove('enter'); void q.offsetWidth; q.classList.add('enter'); }
+}
+function renderSpot(){
+  const s = state.players.find(x => x.id === state.spotlight);
+  $('spot').hidden = !s;
+  if(s) $('spot').innerHTML = `${icon('circle',14,2.4)}<span>Next, <b>${esc(s.name)}</b> answers the same card.</span>`;
+}
+function renderMore(){
+  $('moreBox').hidden = !state.rules.more;
+  $('moreChips').innerHTML = state.players.map((p,i) =>
+    `<button class="chip${state.used[p.id]?' used':''}${i===state.turn?' now':''}" type="button" data-more="${p.id}" aria-pressed="${state.used[p.id]?'true':'false'}">${esc(p.name)}</button>`).join('');
+}
+/* Read the card aloud. Waits briefly after cancelling (some browsers drop an utterance spoken right after cancel),
+   picks an English voice when one is listed, and tells the person if the device stays silent. */
+let speaking = false, speakCheck = null;
+function setReadLabel(on){
+  speaking = on;
+  $('readBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
+  $('readLbl').textContent = on ? 'Stop reading' : 'Read it';
+}
+function stopSpeaking(){ try{ speechSynthesis.cancel(); }catch(e){} clearTimeout(speakCheck); setReadLabel(false); }
+function speak(t){
+  const synth = window.speechSynthesis;
+  if(!synth || typeof SpeechSynthesisUtterance === 'undefined'){ toast('Reading aloud isn’t available in this view. Open the page in Safari or Chrome to use it.'); return; }
+  const go = () => {
+    const u = new SpeechSynthesisUtterance(t.replace(/[“”]/g,''));
+    u.rate = .95; u.lang = 'en-US';
+    try{ const v = synth.getVoices().find(v => /^en(-|_)US/i.test(v.lang)) || synth.getVoices().find(v => /^en/i.test(v.lang)); if(v) u.voice = v; }catch(e){}
+    let started = false;
+    u.onstart = () => { started = true; setReadLabel(true); };
+    u.onend = u.onerror = () => { clearTimeout(speakCheck); setReadLabel(false); };
+    clearTimeout(speakCheck);
+    speakCheck = setTimeout(() => { if(!started){ setReadLabel(false); toast('No sound? Check the phone isn’t on silent, or open the page in your browser.'); } }, 2500);
+    try{ synth.resume(); synth.speak(u); setReadLabel(true); }catch(e){ setReadLabel(false); toast('This device couldn’t read the card aloud.'); }
+  };
+  try{
+    if(synth.speaking || synth.pending){ synth.cancel(); setTimeout(go, 120); } else go();
+  }catch(e){ go(); }
+}
+let timerId = null;
+function stopTimer(){ clearInterval(timerId); timerId = null; $('timerLbl').textContent = '30-second timer'; $('timerBtn').setAttribute('aria-pressed','false'); }
+$('timerBtn').addEventListener('click', () => {
+  if(timerId){ stopTimer(); return; }
+  let left = 30; $('timerBtn').setAttribute('aria-pressed','true'); $('timerLbl').textContent = left + 's';
+  timerId = setInterval(() => {
+    left--; $('timerLbl').textContent = left > 0 ? left + 's' : 'Time!';
+    if(left <= 0){ clearInterval(timerId); timerId = null; $('timerBtn').setAttribute('aria-pressed','false'); try{ navigator.vibrate && navigator.vibrate(200); }catch(e){} }
+  }, 1000);
+});
+
+function advanceTurn(){
+  state.turn = (state.turn + 1) % state.players.length;
+  state.roundCount++;
+  if(state.roundCount >= state.players.length){ state.roundCount = 0; state.used = {}; }
+}
+$('nextBtn').addEventListener('click', () => {
+  if(state.idx >= state.deck.length-1){ state.played++; clearGame(); finish(); return; }
+  pushHistory();
+  state.played++;
+  state.idx++; state.spotlight = null; state.answerer = null;
+  if(state.gameMode === 'interview'){
+    if(state.q < 3 && bringEligible()){ state.q++; }
+    else {
+      if(!nextInterview()){ clearGame(); finish(); return; }
+      toast(`Pass it to ${current().name} for their interview`);
+    }
+  } else advanceTurn();
+  renderCard(true);
+});
+$('putBack').addEventListener('click', () => {
+  const iv = state.gameMode === 'interview';
+  if(iv && state.swapUsed){ toast('The free swap is used for this interview'); return; }
+  if(state.idx >= state.deck.length-1){ toast('That’s the last card'); return; }
+  pushHistory();
+  const [c] = state.deck.splice(state.idx,1);
+  const pos = state.idx + 1 + Math.floor(Math.random() * (state.deck.length - state.idx));
+  state.deck.splice(Math.min(pos, state.deck.length), 0, c);
+  if(iv){ state.swapUsed = true; bringEligible(); }
+  state.spotlight = null; state.answerer = null; renderCard(true);
+  toast(iv ? 'Swapped. Same question number, new card.' : 'Back in the bowl. Here’s another.');
+});
+$('spotBtn').addEventListener('click', () => {
+  const others = state.players.filter(p => p.id !== answererId());
+  $('spotChips').innerHTML = others.map(p => `<button class="chip" type="button" data-spot="${p.id}">${esc(p.name)}</button>`).join('');
+  $('spotSheet').hidden = false;
+});
+$('spotChips').addEventListener('click', e => { const b = e.target.closest('[data-spot]'); if(!b) return; state.spotlight = b.dataset.spot; $('spotSheet').hidden = true; renderSpot(); });
+$('spotRandom').addEventListener('click', () => {
+  const others = state.players.filter(p => p.id !== answererId());
+  state.spotlight = others[Math.floor(Math.random()*others.length)].id; $('spotSheet').hidden = true; renderSpot();
+});
+$('spotCancel').addEventListener('click', () => { $('spotSheet').hidden = true; });
+$('moreChips').addEventListener('click', e => {
+  const b = e.target.closest('[data-more]'); if(!b) return;
+  const id = b.dataset.more; state.used[id] = !state.used[id]; renderMore();
+  if(state.used[id]) toast(`${state.players.find(p => p.id===id).name} used Tell me more`);
+});
+$('readBtn').addEventListener('click', () => { if(speaking) stopSpeaking(); else speak(card().t); });
+try{ window.speechSynthesis && speechSynthesis.getVoices(); }catch(e){}
+$('keepBtn').addEventListener('click', () => {
+  const c = card(), i = state.kept.findIndex(k => k.t === c.t);
+  if(i >= 0) state.kept.splice(i,1);
+  else{
+    const s = state.players.find(x => x.id === state.spotlight);
+    const a = state.players.find(x => x.id === answererId());
+    state.kept.push({id:uid(), cat:c.cat, t:c.t, note: a.name + (s ? ' and ' + s.name : '')});
+  }
+  save(); renderCard(false);
+});
+$('endGame').addEventListener('click', () => finish());
+$('backBtn').addEventListener('click', () => {
+  const snap = state.history.pop(); if(!snap) return;
+  Object.assign(state, snap); renderCard(true); toast('Back to the last card');
+});
+
+/* ---------- RECAP ---------- */
+function finish(){ try{ speechSynthesis.cancel(); }catch(e){} stopTimer(); show('recap'); renderRecap(); }
+function renderRecap(){
+  $('recapEyebrow').textContent = state.played ? `${state.played} card${state.played===1?'':'s'} played` : 'Your keepsakes';
+  $('kept').innerHTML = state.kept.length ? state.kept.map(k => `
+    <div class="keptitem" data-cat="${k.cat}">
+      <span class="meta">${icon(CATS[k.cat].shape,14,2.4)}${esc(CATS[k.cat].name)}</span>
+      <p class="q">${esc(k.t)}</p>
+      <label class="note" for="note-${k.id}">Who told it, and what to ask next time</label>
+      <input class="field" id="note-${k.id}" data-note="${k.id}" value="${esc(k.note||'')}" autocomplete="off">
+      <button class="linkbtn" style="align-self:flex-start;padding-left:0" type="button" data-unkeep="${k.id}">Remove</button>
+    </div>`).join('')
+  : `<p class="empty">No stories kept yet. During the game, tap “Keep this story” on any card that got a great answer, and it will show up here.</p>`;
+  $('copyKept').disabled = !state.kept.length;
+  const g = loadGame();
+  $('keepPlaying').hidden = !g;
+  if(g){ const left = g.deck.length - g.idx; $('keepPlaying').textContent = `Keep playing · ${left} left`; }
+  $('recapEyebrow').textContent += g ? ' · saved for next time' : '';
+}
+$('keepPlaying').addEventListener('click', resumeGame);
+$('kept').addEventListener('input', e => { const k = state.kept.find(x => x.id === e.target.dataset.note); if(k){ k.note = e.target.value; save(); } });
+$('kept').addEventListener('click', e => { const b = e.target.closest('[data-unkeep]'); if(!b) return; state.kept = state.kept.filter(k => k.id !== b.dataset.unkeep); save(); renderRecap(); });
+$('copyKept').addEventListener('click', () => {
+  const text = 'Tell Me One: stories we kept\n\n' + state.kept.map(k => `• [${CATS[k.cat].name}] ${k.t}${k.note ? '\n  ' + k.note : ''}`).join('\n');
+  const done = () => toast('Copied');
+  try{ navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text)); }catch(e){ fallbackCopy(text); }
+});
+function fallbackCopy(text){
+  const ta = document.createElement('textarea'); ta.value = text; ta.className = 'field'; ta.rows = 8; ta.style.width = '100%';
+  ta.setAttribute('aria-label','Kept stories, select and copy'); $('kept').appendChild(ta); ta.select(); toast('Select the text and copy it');
+}
+$('again').addEventListener('click', () => startGame());
+$('again').textContent = 'New game';
+$('toSetup').addEventListener('click', () => { show('setup'); renderSetup(); });
+$('startBtn').addEventListener('click', () => startGame());
+
+function show(v){
+  state.view = v;
+  $('setup').hidden = v !== 'setup'; $('play').hidden = v !== 'play'; $('recap').hidden = v !== 'recap';
+  $('dock').hidden = v !== 'setup';
+  $('credit').hidden = v === 'play';
+  requestAnimationFrame(fitDock);
+  $('suggest').hidden = v === 'play';
+  if(v !== 'play') delete document.body.dataset.cat;
+  window.scrollTo(0,0);
+}
+
+/* ---------- SUGGEST A QUESTION (Formspree) ----------
+   Paste the form ID from formspree.io (the part after /f/ in the form's endpoint). */
+const FORMSPREE_ID = 'xppdbylr';
+$('sgCat').innerHTML = '<option value="Not sure">Not sure</option>' +
+  Object.values(CATS).map(c => `<option value="${esc(c.name)}">${esc(c.name)}</option>`).join('');
+function sgStatus(msg, err){ const s = $('sgStatus'); s.textContent = msg; s.hidden = !msg; s.classList.toggle('err', !!err); }
+function openSuggest(open){
+  $('suggestForm').hidden = !open; $('suggestOpen').hidden = open;
+  $('suggestOpen').setAttribute('aria-expanded', open ? 'true' : 'false');
+  if(open){ sgStatus(''); $('sgQ').focus(); }
+}
+$('suggestOpen').addEventListener('click', () => openSuggest(true));
+$('sgCancel').addEventListener('click', () => openSuggest(false));
+$('suggestForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const q = $('sgQ').value.trim();
+  if(q.length < 8){ sgStatus('Write out the whole question first.', true); $('sgQ').focus(); return; }
+  if(!FORMSPREE_ID){ sgStatus('Suggestions aren’t switched on yet. Check back soon.', true); return; }
+  const btn = $('sgSend'); btn.disabled = true; btn.textContent = 'Sending…'; sgStatus('');
+  try{
+    const data = new FormData($('suggestForm'));
+    data.set('question', q);
+    data.set('_subject', 'Tell Me One: new question suggestion');
+    const res = await fetch('https://formspree.io/f/' + encodeURIComponent(FORMSPREE_ID), {method:'POST', body:data, headers:{Accept:'application/json'}});
+    if(!res.ok) throw new Error('status ' + res.status);
+    $('sgQ').value = '';
+    sgStatus('Sent. Thank you! Casey reads every one.');
+    toast('Question sent');
+  }catch(err){
+    sgStatus('That didn’t send. Check your internet connection and try again.', true);
+  }finally{
+    btn.disabled = false; btn.textContent = 'Send it to Casey';
+  }
+});
+
+/* Keep the page's bottom padding equal to the start bar's real height, so the footer is never hidden behind it. */
+function fitDock(){
+  const d = $('dock');
+  const h = d.hidden ? 0 : Math.ceil(d.getBoundingClientRect().height);
+  document.documentElement.style.setProperty('--dock-h', h + 'px');
+}
+try{ new ResizeObserver(fitDock).observe($('dock')); }catch(e){}
+window.addEventListener('resize', fitDock);
+
+/* ---------- BOOT ---------- */
+function start(data){
+  load();
+  if(data && data.deck){ Object.assign(state, data); }
+  show(state.view);
+  if(state.view === 'play' && state.deck.length){ renderCard(false); }
+  else if(state.view === 'recap'){ renderRecap(); }
+  else { show('setup'); renderSetup(); }
+}
+try{ window.claude?.hot?.snapshot?.(() => JSON.parse(JSON.stringify(state))); }catch(e){}
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
+
+</body>
+</html>
