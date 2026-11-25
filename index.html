@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script async src="https://www.googletagmanager.com/gtm.js?id=GTM-TJ5XC62R"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Tell Me One</title>
@@ -590,6 +596,9 @@ function nameList(ps){
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
 const named = () => state.players.filter(p => p.name.trim());
 
+/* Analytics: counts game moments only (never names, answers or typed questions). Does nothing where the Google tag isn't loaded. */
+function track(name, params){ try{ if(typeof window.gtag === 'function') window.gtag('event', name, params || {}); }catch(e){} }
+
 /* ---------- SETUP ---------- */
 function renderSetup(){
   $('heroShapes').innerHTML = ['tri','star','circle','diamond','square','heart','moon'].map(s => icon(s,22,2)).join('');
@@ -647,7 +656,7 @@ function resumeGame(){
   Object.assign(state, g); state.history = [];
   show('play'); keepAwake(); renderCard(true);
 }
-$('resumeBtn').addEventListener('click', resumeGame);
+$('resumeBtn').addEventListener('click', () => { track('game_resume', {source:'setup'}); resumeGame(); });
 
 $('players').addEventListener('input', e => {
   const el = e.target, p = state.players.find(x => x.id === el.dataset.pid); if(!p) return;
@@ -733,6 +742,7 @@ function startGame(){
   state.gameMode = state.mode === 'interview' ? 'interview' : 'table'; state.q = 1; state.swapUsed = false;
   if(state.gameMode === 'interview' && !bringEligible() && !nextInterview()){ toast('No cards fit these players. Turn on more categories.'); return; }
   save(); show('play'); keepAwake(); renderCard(true);
+  track('game_start', {mode: state.gameMode, players: state.players.length, cards: state.deck.length});
 }
 /* Interview mode: only draw cards the person in the hot seat can answer themselves. */
 function eligible(c, p){
@@ -901,14 +911,14 @@ function advanceTurn(){
   if(state.roundCount >= state.players.length){ state.roundCount = 0; }
 }
 $('nextBtn').addEventListener('click', () => {
-  if(state.idx >= state.deck.length-1){ state.played++; clearGame(); finish(); return; }
+  if(state.idx >= state.deck.length-1){ state.played++; clearGame(); track('deck_finished', {mode: state.gameMode, cards_played: state.played}); finish(); return; }
   pushHistory();
   state.played++;
   state.idx++; state.spotlight = null; state.answerer = null;
   if(state.gameMode === 'interview'){
     if(state.q < 3 && bringEligible()){ state.q++; }
     else {
-      if(!nextInterview()){ clearGame(); finish(); return; }
+      if(!nextInterview()){ clearGame(); track('deck_finished', {mode: state.gameMode, cards_played: state.played}); finish(); return; }
       toast(`Pass it to ${current().name} for their interview`);
     }
   } else advanceTurn();
@@ -946,6 +956,7 @@ $('keepBtn').addEventListener('click', () => {
     const s = state.players.find(x => x.id === state.spotlight);
     const a = state.players.find(x => x.id === answererId());
     state.kept.push({id:uid(), cat:c.cat, t:c.t, note: a.name + (s ? ' and ' + s.name : '')});
+    track('story_kept', {category: CATS[c.cat].name});
   }
   save(); renderCard(false);
 });
@@ -1029,6 +1040,7 @@ $('suggestForm').addEventListener('submit', async e => {
     if(!res.ok) throw new Error('status ' + res.status);
     $('sgQ').value = '';
     sgStatus('Sent. Thank you! Casey reads every one.');
+    track('question_suggested', {category: $('sgCat').value});
     toast('Question sent');
   }catch(err){
     sgStatus('That didn’t send. Check your internet connection and try again.', true);
@@ -1075,8 +1087,8 @@ function closeSplash(then){
   splash.classList.add('up');
   setTimeout(finish, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 650);
 }
-$('playBtn').addEventListener('click', () => closeSplash());
-$('splashResume').addEventListener('click', () => closeSplash(resumeGame));
+$('playBtn').addEventListener('click', () => { track('cover_play'); closeSplash(); });
+$('splashResume').addEventListener('click', () => { track('game_resume', {source:'cover'}); closeSplash(resumeGame); });
 $('titleBtn').addEventListener('click', () => openSplash(true));
 
 /* ---------- BOOT ---------- */
