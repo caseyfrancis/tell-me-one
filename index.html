@@ -66,7 +66,7 @@ img{max-width:100%}
 html,body{height:100%}
 body{background:var(--paper);color:var(--ink);font-family:var(--ui);font-size:16px;line-height:1.45;transition:background-color .5s ease;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
-.wrap{max-width:560px;margin:0 auto;padding-block:24px calc(var(--dock-h, 150px) + env(safe-area-inset-bottom, 0px) + 32px);display:flex;flex-direction:column;gap:28px}
+.wrap{max-width:560px;margin:0 auto;padding-block:24px calc(var(--dock-h, 150px) + env(safe-area-inset-bottom, 0px) + 56px);display:flex;flex-direction:column;gap:28px}
 h1,h2,h3{margin:0;text-wrap:balance}
 p{margin:0}
 button,input,select{font:inherit;color:inherit}
@@ -171,7 +171,6 @@ body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
 .sheet{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:8px 14px;min-height:40px;font-size:15px}
-.chip.used{text-decoration:line-through;color:var(--muted);background:transparent}
 .chip.now{border-color:var(--accent)}
 .more{display:flex;flex-direction:column;gap:8px}
 .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
@@ -193,6 +192,15 @@ body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
 .keptitem .meta{display:flex;gap:6px;align-items:center;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cat-ink)}
 .empty{border:1px dashed var(--line);border-radius:14px;padding:18px;color:var(--muted);font-size:15px}
 .row{display:flex;gap:10px;flex-wrap:wrap}
+.moreopts{border:1px solid var(--line);border-radius:16px;background:var(--card)}
+.moreopts > summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;min-height:52px;box-sizing:border-box;cursor:pointer;font-weight:600;font-size:15px;border-radius:16px}
+.moreopts > summary::-webkit-details-marker{display:none}
+.moreopts > summary .chev{transition:transform .2s;color:var(--muted)}
+.moreopts[open] > summary .chev{transform:rotate(180deg)}
+.moreopts > summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.moreopts-body{display:flex;flex-direction:column;gap:28px;padding:4px 16px 18px}
+.note.sample{background:var(--soft);border-radius:12px;padding:10px 12px;color:var(--ink)}
+@media (prefers-reduced-motion: reduce){.moreopts > summary .chev{transition:none}}
 .credit{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;font-size:13px;color:var(--muted);padding-top:12px;border-top:1px solid var(--line)}
 .credit a{color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 .credit a:hover{color:var(--ink)}
@@ -228,9 +236,13 @@ body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
 
     <section aria-labelledby="h-players">
       <h2 id="h-players">Who's playing</h2>
-      <p class="note" id="exampleNote">These are placeholder names. Change them to your family, in seating order. The youngest goes first.</p>
+      <p class="note sample" id="exampleNote">This is a sample family. Clear it and add your own players, in seating order. The youngest goes first.</p>
+      <p class="note" id="orderNote" hidden>List players in seating order. The youngest goes first.</p>
       <div class="players" id="players"></div>
-      <button class="ghost" id="addPlayer" type="button">+ Add a player</button>
+      <div class="row">
+        <button class="ghost" id="addPlayer" type="button">+ Add a player</button>
+        <button class="ghost" id="clearSample" type="button">Clear sample family</button>
+      </div>
     </section>
 
     <section aria-labelledby="h-cats">
@@ -247,18 +259,14 @@ body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
       <p class="note" id="modeNote"></p>
     </section>
 
-    <section aria-labelledby="h-rules">
-      <h2 id="h-rules">House rules</h2>
-      <div class="checks">
-        <label class="check"><input type="checkbox" id="rMore"><span><b>Tell me more</b><small>Everyone gets one follow-up question per round.</small></span></label>
-      </div>
-    </section>
-
+    <details class="moreopts" id="moreOpts">
+      <summary><span>More options</span><svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="moreopts-body">
     <section aria-labelledby="h-own">
       <h2 id="h-own">Add your own questions</h2>
       <form class="addq" id="addQ">
         <label class="sr" for="newQ" hidden>Question</label>
-        <input class="field" id="newQ" placeholder="Grandpa, what was your first car?" autocomplete="off">
+        <input class="field" id="newQ" placeholder="Add a family question…" autocomplete="off">
         <select class="field" id="newQCat" aria-label="Category"></select>
         <button class="secondary" type="submit">Add</button>
       </form>
@@ -277,6 +285,8 @@ body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
         <div class="row"><button class="primary" id="resetYes" type="button">Yes, reset</button><button class="linkbtn" id="resetNo" type="button">Cancel</button></div>
       </div>
     </section>
+      </div>
+    </details>
   </div>
 
   <!-- PLAY -->
@@ -322,10 +332,6 @@ body[data-cat]{background:color-mix(in srgb, var(--cat-bg) 55%, var(--paper))}
       <button class="primary" id="nextBtn" type="button">Next card</button>
     </div>
 
-    <div class="more" id="moreBox">
-      <span class="eyebrow">Tell me more · one each this round</span>
-      <div class="chips" id="moreChips"></div>
-    </div>
   </div>
 
   <!-- RECAP -->
@@ -492,16 +498,15 @@ let state = {
   view:'setup', example:true,
   players:EXAMPLE,
   cats:{roots:true, wonder:true, mirror:true, deep:true, play:true, kids:true, wild:true},
-  rules:{more:true, hints:true, read:false},
   custom:[], kept:[], mode:'table',
-  deck:[], idx:0, turn:0, spotlight:null, answerer:null, used:{}, roundCount:0, played:0, history:[],
+  deck:[], idx:0, turn:0, spotlight:null, answerer:null, roundCount:0, played:0, history:[],
   gameMode:'table', q:1, swapUsed:false
 };
 /* The game in progress is saved separately so it can be resumed at the next gathering. */
 const GAME_KEY = KEY + '-game';
-const GAME_FIELDS = ['players','deck','idx','turn','spotlight','answerer','used','roundCount','played','gameMode','q','swapUsed'];
+const GAME_FIELDS = ['players','deck','idx','turn','spotlight','answerer','roundCount','played','gameMode','q','swapUsed'];
 const MODE_NOTES = {
-  table:'Everyone takes turns drawing a card. Answer it, or hand it to the person the card names, then pass the phone to the next seat. Good for quick, lively rounds.',
+  table:'Everyone takes turns drawing one card. Answer it, or hand it to the person the card names, then pass the phone to the next seat. Good for quick, lively rounds.',
   interview:'One person gets interviewed: they answer three questions in a row while everyone else listens and asks follow-ups. Then the phone passes to the next seat. Questions are picked to fit each person’s age, and they can skip one card per interview. Good for longer stories.'
 };
 function saveGame(){
@@ -512,7 +517,7 @@ function loadGame(){
 }
 function clearGame(){ try{ localStorage.removeItem(GAME_KEY); }catch(e){} }
 function pushHistory(){
-  const snap = {}; ['deck','idx','turn','spotlight','answerer','used','roundCount','played','q','swapUsed'].forEach(k => snap[k] = state[k]);
+  const snap = {}; ['deck','idx','turn','spotlight','answerer','roundCount','played','q','swapUsed'].forEach(k => snap[k] = state[k]);
   state.history.push(JSON.parse(JSON.stringify(snap)));
   if(state.history.length > 60) state.history.shift();
 }
@@ -521,14 +526,14 @@ function load(){
   try{
     const raw = localStorage.getItem(KEY); if(!raw) return;
     const s = JSON.parse(raw);
-    ['players','rules','custom','kept','example','mode'].forEach(k => { if(s[k] !== undefined) state[k] = s[k]; });
+    ['players','custom','kept','example','mode'].forEach(k => { if(s[k] !== undefined) state[k] = s[k]; });
     if(s.cats) Object.keys(state.cats).forEach(k => { if(typeof s.cats[k] === 'boolean') state.cats[k] = s.cats[k]; });
   }catch(e){}
 }
 function save(){
   try{
-    const {players,cats,rules,custom,kept,example,mode} = state;
-    localStorage.setItem(KEY, JSON.stringify({players,cats,rules,custom,kept,example,mode}));
+    const {players,cats,custom,kept,example,mode} = state;
+    localStorage.setItem(KEY, JSON.stringify({players,cats,custom,kept,example,mode}));
   }catch(e){}
 }
 
@@ -548,6 +553,8 @@ const named = () => state.players.filter(p => p.name.trim());
 function renderSetup(){
   $('heroShapes').innerHTML = ['tri','star','circle','diamond','square','heart','moon'].map(s => icon(s,22,2)).join('');
   $('exampleNote').hidden = !state.example;
+  $('orderNote').hidden = state.example;
+  $('clearSample').hidden = !state.example;
   $('players').innerHTML = state.players.map(p => `
     <div class="prow">
       <input class="field" id="pname-${p.id}" data-pid="${p.id}" data-f="name" value="${esc(p.name)}" placeholder="Name" aria-label="Player name" autocomplete="off">
@@ -570,7 +577,6 @@ function renderSetup(){
     <div class="custom" data-cat="${c.cat}">${icon(CATS[c.cat].shape,14,2.2)}<p>${esc(c.t)}</p>
       <button class="icon-btn" style="width:36px;height:36px" type="button" data-delq="${c.id}" aria-label="Delete this question">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`).join('');
-  $('rMore').checked = state.rules.more;
   $('modeTable').checked = state.mode !== 'interview'; $('modeInterview').checked = state.mode === 'interview';
   $('modeNote').textContent = MODE_NOTES[state.mode === 'interview' ? 'interview' : 'table'];
   updateDock();
@@ -606,17 +612,30 @@ $('players').addEventListener('input', e => {
   const el = e.target, p = state.players.find(x => x.id === el.dataset.pid); if(!p) return;
   p[el.dataset.f] = el.value; state.example = false; save(); updateDock();
 });
-$('players').addEventListener('change', e => { if(e.target.dataset.f === 'name') renderSetup(); });
+/* After a name is typed, only refresh that row's labels; rebuilding the list would steal the tap on the next field. */
+$('players').addEventListener('change', e => {
+  if(e.target.dataset.f !== 'name') return;
+  const id = e.target.dataset.pid, p = state.players.find(x => x.id === id); if(!p) return;
+  const who = p.name || 'player';
+  const sel = $('pgroup-' + id); if(sel) sel.setAttribute('aria-label', 'Age group for ' + who);
+  const rm = document.querySelector(`[data-remove="${id}"]`); if(rm) rm.setAttribute('aria-label', 'Remove ' + who);
+  $('exampleNote').hidden = true; $('orderNote').hidden = false; $('clearSample').hidden = true;
+});
 $('players').addEventListener('click', e => {
   const b = e.target.closest('[data-remove]'); if(!b) return;
   state.players = state.players.filter(p => p.id !== b.dataset.remove); state.example = false; save(); renderSetup();
+});
+$('clearSample').addEventListener('click', () => {
+  state.players = [{id:uid(), name:'', group:'adult'}, {id:uid(), name:'', group:'adult'}];
+  state.example = false; clearGame(); save(); renderSetup();
+  const el = $('pname-' + state.players[0].id); if(el) el.focus();
+  toast('Sample family cleared. Add your players.');
 });
 $('addPlayer').addEventListener('click', () => {
   const p = {id:uid(), name:'', group:'adult'}; state.players.push(p); save(); renderSetup();
   const el = $('pname-'+p.id); if(el) el.focus();
 });
 $('cats').addEventListener('change', e => { const k = e.target.dataset.cat; if(!k) return; state.cats[k] = e.target.checked; save(); updateDock(); });
-$('rMore').addEventListener('change', e => { state.rules.more = e.target.checked; save(); });
 $('addQ').addEventListener('submit', e => {
   e.preventDefault(); const t = $('newQ').value.trim(); if(!t) return;
   state.custom.push({id:uid(), cat:$('newQCat').value, t}); $('newQ').value = ''; save(); renderSetup(); toast('Added to the bowl');
@@ -632,7 +651,7 @@ const RESETS = {
       clearGame();
       state.players = examplePlayers(); state.example = true; state.custom = []; state.kept = [];
       Object.keys(state.cats).forEach(k => state.cats[k] = true);
-      state.rules = {more:true, hints:true, read:false}; state.mode = 'table';
+      state.mode = 'table';
     }}
 };
 let pendingReset = null;
@@ -669,7 +688,7 @@ function startGame(){
   state.deck = shuffle(deck); state.idx = 0; state.played = 0;
   let youngest = 0;
   state.players.forEach((p,i) => { if(RANK[p.group] < RANK[state.players[youngest].group]) youngest = i; });
-  state.turn = youngest; state.used = {}; state.roundCount = 0; state.spotlight = null; state.answerer = null; state.history = [];
+  state.turn = youngest; state.roundCount = 0; state.spotlight = null; state.answerer = null; state.history = [];
   state.gameMode = state.mode === 'interview' ? 'interview' : 'table'; state.q = 1; state.swapUsed = false;
   if(state.gameMode === 'interview' && !bringEligible() && !nextInterview()){ toast('No cards fit these players. Turn on more categories.'); return; }
   save(); show('play'); keepAwake(); renderCard(true);
@@ -788,7 +807,6 @@ function renderCard(animate){
   const nextP = state.players[(state.turn + 1) % state.players.length];
   $('nextBtn').textContent = state.idx === state.deck.length-1 ? 'Finish'
     : iv && state.q >= 3 ? `Next interview → ${nextP.name}` : iv ? 'Next question' : 'Next card';
-  renderMore();
   $('backBtn').disabled = !state.history.length;
   saveGame();
   if(animate){ const q = $('qcard'); q.classList.remove('enter'); void q.offsetWidth; q.classList.add('enter'); }
@@ -797,11 +815,6 @@ function renderSpot(){
   const s = state.players.find(x => x.id === state.spotlight);
   $('spot').hidden = !s;
   if(s) $('spot').innerHTML = `${icon('circle',14,2.4)}<span>Next, <b>${esc(s.name)}</b> answers the same card.</span>`;
-}
-function renderMore(){
-  $('moreBox').hidden = !state.rules.more;
-  $('moreChips').innerHTML = state.players.map((p,i) =>
-    `<button class="chip${state.used[p.id]?' used':''}${i===state.turn?' now':''}" type="button" data-more="${p.id}" aria-pressed="${state.used[p.id]?'true':'false'}">${esc(p.name)}</button>`).join('');
 }
 /* Read the card aloud. Waits briefly after cancelling (some browsers drop an utterance spoken right after cancel),
    picks an English voice when one is listed, and tells the person if the device stays silent. */
@@ -844,7 +857,7 @@ $('timerBtn').addEventListener('click', () => {
 function advanceTurn(){
   state.turn = (state.turn + 1) % state.players.length;
   state.roundCount++;
-  if(state.roundCount >= state.players.length){ state.roundCount = 0; state.used = {}; }
+  if(state.roundCount >= state.players.length){ state.roundCount = 0; }
 }
 $('nextBtn').addEventListener('click', () => {
   if(state.idx >= state.deck.length-1){ state.played++; clearGame(); finish(); return; }
@@ -883,11 +896,6 @@ $('spotRandom').addEventListener('click', () => {
   state.spotlight = others[Math.floor(Math.random()*others.length)].id; $('spotSheet').hidden = true; renderSpot();
 });
 $('spotCancel').addEventListener('click', () => { $('spotSheet').hidden = true; });
-$('moreChips').addEventListener('click', e => {
-  const b = e.target.closest('[data-more]'); if(!b) return;
-  const id = b.dataset.more; state.used[id] = !state.used[id]; renderMore();
-  if(state.used[id]) toast(`${state.players.find(p => p.id===id).name} used Tell me more`);
-});
 $('readBtn').addEventListener('click', () => { if(speaking) stopSpeaking(); else speak(card().t); });
 try{ window.speechSynthesis && speechSynthesis.getVoices(); }catch(e){}
 $('keepBtn').addEventListener('click', () => {
